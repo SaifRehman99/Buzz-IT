@@ -1,14 +1,20 @@
 <form action="/user/register" method="POST">
-  <label for="">Name</label>
-  <input type="text" name="name" id="">
-  <label for="">Email</label>
-
-  <input type="email" name="email" id="">
-  <label for="">Password</label>
-
-  <input type="password" name="password" id="">
-  <label for="">Confirm Passowrd</label>
-  <input type="password" name="password2" id="">
-
-  <button type="submit">Register</button>
+  <div class="form-group">
+    <label for="exampleName">Name</label>
+    <input type="email" class="form-control" id="exampleName" name="name">
+  </div>
+  <div class="form-group">
+    <label for="exampleEmail">Email</label>
+    <input type="email" class="form-control" id="exampleEmail" name="email">
+    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword2">Confirm Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword2" name="password2">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>

@@ -1,8 +1,5 @@
-<h1>Hello {{USER.name}}</h1>
-
-
-<ul>
+<div class="list-group">
   {{#each data}}
-  <li> <a href="/articles/{{this._id}}">{{this.title}}</a></li>
+  <a href="/articles/{{this._id}}" class="list-group-item list-group-item-action">{{this.title}}</a>
   {{/each}}
-</ul>
+</div>

@@ -55,7 +55,7 @@ router.post(
                 req.flash("success", "Article Added");
             })
             .catch(err => {
-                req.flash("danger", "Unable to Add");
+                req.flash("error", "Unable to Add");
                 console.log(err);
             });
     }
@@ -108,7 +108,7 @@ router.post("/edit/:id", checkAuth, (req, res) => {
             req.flash("success", "Updated");
         })
         .catch(err => {
-            req.flash("danger", "Unable to update");
+            req.flash("error", "Unable to update");
             console.log(err);
         });
 });
@@ -117,11 +117,11 @@ router.post("/edit/:id", checkAuth, (req, res) => {
 router.delete("/:id", (req, res) => {
     Artlices.deleteOne({ _id: req.params.id })
         .then(data => {
-            req.flash("success", "Deleted");
+            req.flash("success", "Article Deleted");
             res.redirect("/");
         })
         .catch(err => {
-            req.flash("danger", "Unable to delete");
+            req.flash("error", "Unable to delete");
             console.log(err);
         });
 });

@@ -1,9 +1,13 @@
-<h1>Title= {{data.title}}</h1>
-<h2>Written by = {{data.author}}</h2>
-<h2>Body = {{data.body}}</h2>
-{{#if display}}
-
-<a class="btn btn-primary" href="/articles/edit/{{data._id}}">Edit</a>
-<a class="btn btn-danger text-white delete" href="#" data-id={{data._id}}>Delete</a>
-
-{{/if}}
+<div class="card text-center">
+  <div class="card-header">
+    {{data.title}}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{data.title}}</h5>
+    <p class="card-text">{{data.body}}</p>
+    {{#if display}}
+    <a class="btn btn-primary" href="/articles/edit/{{data._id}}">Edit</a>
+    <a class="btn btn-danger text-white delete" href="#" data-id={{data._id}}>Delete</a>
+    {{/if}}
+  </div>
+</div>

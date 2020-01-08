@@ -47,7 +47,9 @@ app.use(
 // setting the flash messages here to notify the messages
 app.use(flash());
 app.use(function(req, res, next) {
-    res.locals.messages = require("express-messages")(req, res);
+    // res.locals.messages = require("express-messages")(req, res);
+    res.locals.success_msg = flash("success");
+    res.locals.error_msg = flash("error");
     next();
 });
 
@@ -75,7 +77,8 @@ app.get("/", (req, res) => {
         .exec()
         .then(data => {
             res.render("index", {
-                data
+                data,
+                ok: req.flash("success")
             });
         });
 });

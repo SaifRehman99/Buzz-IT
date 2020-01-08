@@ -59,7 +59,7 @@ router.post(
                                 })
                                 .catch(error => {
                                     res.redirect("/user/register");
-                                    req.flash("danger", "Cant Register");
+                                    req.flash("error", "Unable to Register..");
                                 });
                         }
                     });
@@ -89,7 +89,7 @@ router.post("/login", checkState, (req, res, next) => {
 router.get("/logout", (req, res) => {
     req.logout();
     res.redirect("/user/login");
-    req.flash("danger", "Logout Success");
+    req.flash("success", "Logout Success");
 });
 
 // checking for the login user

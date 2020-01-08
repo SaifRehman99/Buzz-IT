@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/ec2f5d14f1.js" crossorigin="anonymous"></script>
   <title>Article APP</title>
 </head>
 
@@ -33,15 +34,18 @@
       <ul class="navbar-nav ml-auto">
         {{#if USER}}
         <li class="nav-item">
-          <a class="nav-link" href="/user/logout">Logout</a>
+          <a class="nav-link" href="/">{{USER.name}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/logout">Logout <i class="fas fa-external-link-alt"></i></a>
         </li>
 
         {{else}}
         <li class="nav-item">
-          <a class="nav-link" href="/user/register">Register</a>
+          <a class="nav-link" href="/user/register">Register <i class="fas fa-user-plus"></i></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/user/login">Login</a>
+          <a class="nav-link" href="/user/login">Login <i class="fas fa-sign-in-alt"></i></a>
         </li>
 
         {{/if}}
@@ -51,11 +55,12 @@
     </div>
   </nav>
 
-  {{!-- setting the flash messages here --}}
 
 
+  <div class="container mt-3">
+    {{{body}}}
 
-  {{{body}}}
+  </div>
 
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
