@@ -2,6 +2,13 @@ const express = require("express");
 const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
 const path = require("path");
+const passport = require("passport");
+
+// for saving the state of login logout user
+const session = require("express-session");
+
+// for saving the global varible data
+const flash = require("connect-flash");
 
 // importing the model here
 const Artlices = require("./Models/article");
@@ -20,6 +27,38 @@ app.use(express.urlencoded({ extended: true }));
 // making the static folder here
 app.use(express.static(path.join(__dirname, "static")));
 
+// using the session middleware here for saving the state of login user :)
+app.use(
+    session({
+        secret: "keyboard cat",
+        resave: true,
+        saveUninitialized: true
+    })
+);
+
+// setting the flash messages here to notify the messages
+app.use(flash());
+app.use(function(req, res, next) {
+    res.locals.messages = require("express-messages")(req, res);
+    next();
+});
+
+// passport here
+require("./config/passport")(passport);
+
+// initialize middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// setting the login user global user here
+app.get("*", (req, res, next) => {
+    res.locals.USER = req.user;
+    res.locals.success_msg = req.flash("success");
+    res.locals.error_msg = req.flash("danger");
+
+    next();
+});
+
 // creating the routes here
 app.get("/", (req, res) => {
     Artlices.find()
@@ -32,75 +71,11 @@ app.get("/", (req, res) => {
         });
 });
 
-// getting the add article
-app.get("/articles/add", (req, res) => {
-    res.render("addArticle", {
-        name: "Saif"
-    });
-});
+// importing the article route here
+app.use("/articles", require("./Routes/article"));
 
-// adding the article
-app.post("/articles/add", (req, res) => {
-    let article = new Artlices({
-        _id: new mongoose.Types.ObjectId(),
-        title: req.body.title,
-        author: req.body.author,
-        body: req.body.body
-    });
-
-    article
-        .save()
-        .then(result => {
-            res.redirect("/");
-        })
-        .catch(err => console.log(err));
-});
-
-// getting the single artilce
-app.get("/articles/:id", (req, res) => {
-    Artlices.findById(req.params.id)
-        .then(data => {
-            res.render("singleArticle", {
-                data
-            });
-        })
-        .catch(err => console.log(err));
-});
-
-// get edit artilce
-app.get("/articles/edit/:id", (req, res) => {
-    Artlices.findById(req.params.id)
-        .then(data => {
-            res.render("editArticle", {
-                data
-            });
-        })
-        .catch(err => console.log(err));
-});
-
-// POSt get articles
-app.post("/articles/edit/:id", (req, res) => {
-    let articles = {
-        title: req.body.title,
-        author: req.body.author,
-        body: req.body.body
-    };
-    Artlices.updateOne({ _id: req.params.id }, articles)
-        .then(data => {
-            res.redirect("/");
-        })
-        .catch(err => console.log(err));
-});
-
-// deleting the article here
-app.delete("/articles/:id", (req, res) => {
-    Artlices.deleteOne({ _id: req.params.id })
-        .then(data => {
-            console.log("deleted!");
-            res.redirect("/");
-        })
-        .catch(err => console.log(err));
-});
+// importing the users route here
+app.use("/user", require("./Routes/users"));
 
 // Setting the port here
 const PORT = process.env.PORT || 1200;
@@ -108,7 +83,7 @@ const PORT = process.env.PORT || 1200;
 // connecting the mongo to the application
 mongoose
     .connect(
-        "mongodb+srv://Saif:12345@cluster0-nwkpt.mongodb.net/test?retryWrites=true&w=majority", {
+        "mongodb+srv://SaifRehman:12345s@cluster0-dsdv1.mongodb.net/test?retryWrites=true&w=majority", {
             useNewUrlParser: true,
             useUnifiedTopology: true
         }
