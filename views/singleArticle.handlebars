@@ -1,5 +1,9 @@
-<h1>{{data.title}}</h1>
-<h2>{{data.author}}</h2>
-<h2>{{data.body}}</h2>
+<h1>Title= {{data.title}}</h1>
+<h2>Written by = {{data.author}}</h2>
+<h2>Body = {{data.body}}</h2>
+{{#if display}}
+
 <a class="btn btn-primary" href="/articles/edit/{{data._id}}">Edit</a>
 <a class="btn btn-danger text-white delete" href="#" data-id={{data._id}}>Delete</a>
+
+{{/if}}

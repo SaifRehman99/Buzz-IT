@@ -9,6 +9,10 @@ let Articles = mongoose.Schema({
         type: String,
         required: true
     },
+    authorID: {
+        type: String,
+        required: true
+    },
     body: {
         type: String,
         required: true

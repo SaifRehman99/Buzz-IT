@@ -13,13 +13,14 @@ const { check, validationResult } = require("express-validator");
 // importing the model here
 const Users = require("../Models/users");
 
-router.get("/register", (req, res) => {
+router.get("/register", checkState, (req, res) => {
     res.render("register");
 });
 
 // register the user here
 router.post(
-    "/register", [
+    "/register",
+    checkState, [
         // username must be an 4 character long
         check("name").isLength({ min: 4 }),
 
@@ -69,18 +70,18 @@ router.post(
 );
 
 // getting the login here
-router.get("/login", (req, res) => {
+router.get("/login", checkState, (req, res) => {
     res.render("login", {
         user: req.user
     });
 });
 
 // login here
-router.post("/login", (req, res, next) => {
+router.post("/login", checkState, (req, res, next) => {
     passport.authenticate("local", {
         successRedirect: "/",
         failureRedirect: "/user/login",
-        failureFlash: false
+        failureFlash: true
     })(req, res, next);
 });
 
@@ -90,5 +91,13 @@ router.get("/logout", (req, res) => {
     res.redirect("/user/login");
     req.flash("danger", "Logout Success");
 });
+
+// checking for the login user
+function checkState(req, res, next) {
+    if (req.isAuthenticated()) {
+        return res.redirect("/");
+    }
+    next();
+}
 
 module.exports = router;

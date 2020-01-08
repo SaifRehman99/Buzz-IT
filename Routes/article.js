@@ -11,7 +11,7 @@ const { check, validationResult } = require("express-validator");
 const Artlices = require("../Models/article");
 
 // getting the add article
-router.get("/add", (req, res) => {
+router.get("/add", checkAuth, (req, res) => {
     res.render("addArticle", {
         name: "Saif"
     });
@@ -19,12 +19,14 @@ router.get("/add", (req, res) => {
 
 // adding the article
 router.post(
-    "/add", [
+    "/add",
+    checkAuth, [
         // username must be an 4 character long
         check("title").isEmpty(),
         check("author").isEmpty(),
         check("body").isEmpty()
     ],
+    checkAuth,
     (req, res) => {
         // / Finds the validation errors in this request and wraps them in an object with handy functions
         var errors = validationResult(req);
@@ -39,8 +41,11 @@ router.post(
         let article = new Artlices({
             _id: new mongoose.Types.ObjectId(),
             title: req.body.title,
-            author: req.body.author,
-            body: req.body.body
+
+            body: req.body.body,
+            // login name and id here
+            author: req.user.name,
+            authorID: req.user.id
         });
 
         article
@@ -60,17 +65,27 @@ router.post(
 router.get("/:id", (req, res) => {
     Artlices.findById(req.params.id)
         .then(data => {
+            // checking if the user login is same as who write the article
+            if (req.user) {
+                if (req.user._id == data.authorID) var display = true;
+            } else {
+                console.log("nh ha");
+            }
             res.render("singleArticle", {
-                data
+                data,
+                display
             });
         })
         .catch(err => console.log(err));
 });
 
 // get edit artilce
-router.get("/edit/:id", (req, res) => {
+router.get("/edit/:id", checkAuth, (req, res) => {
     Artlices.findById(req.params.id)
         .then(data => {
+            if (data.authorID != req.user._id) {
+                res.redirect("/");
+            }
             res.render("editArticle", {
                 data
             });
@@ -81,7 +96,7 @@ router.get("/edit/:id", (req, res) => {
 });
 
 // POSt get articles
-router.post("/edit/:id", (req, res) => {
+router.post("/edit/:id", checkAuth, (req, res) => {
     let articles = {
         title: req.body.title,
         author: req.body.author,
@@ -110,6 +125,15 @@ router.delete("/:id", (req, res) => {
             console.log(err);
         });
 });
+
+// checking for the authenticated user
+function checkAuth(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        return res.redirect("/user/login");
+    }
+}
 
 // exporting the routes here
 module.exports = router;

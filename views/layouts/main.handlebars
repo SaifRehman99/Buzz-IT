@@ -21,9 +21,12 @@
         <li class="nav-item">
           <a class="nav-link" href="/">Home</a>
         </li>
+        {{#if USER}}
         <li class="nav-item">
           <a class="nav-link" href="/articles/add">Add Atrilce</a>
         </li>
+        {{/if}}
+
       </ul>
 
       {{!-- for auth --}}
@@ -49,6 +52,7 @@
   </nav>
 
   {{!-- setting the flash messages here --}}
+
 
 
   {{{body}}}

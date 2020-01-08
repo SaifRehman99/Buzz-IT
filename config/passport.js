@@ -1,3 +1,4 @@
+// setting the strategy here
 const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
@@ -7,6 +8,7 @@ const User = require("../Models/users");
 
 module.exports = function(passport) {
     passport.use(
+        // (usernameField ha ye, password, done)
         new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
             // Match user
             User.findOne({
@@ -32,13 +34,20 @@ module.exports = function(passport) {
         })
     );
 
+    // serialize
     passport.serializeUser((user, done) => {
         done(null, user.id);
     });
 
+    // serialize user in single id islea we pass id to deserialize the user
     passport.deserializeUser((id, done) => {
         User.findById(id, function(err, user) {
             done(err, user);
         });
     });
 };
+
+// app.delete('/logout',(req, res)=>{res.redirect('/login') res.logout()})
+// npm method-override
+// app.use(methodOver('_method))
+// form k action='/logout?_method=DELETE method="POST"

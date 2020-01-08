@@ -1,3 +1,8 @@
+// setting the env file here
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
+
 const express = require("express");
 const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
@@ -29,10 +34,13 @@ app.use(express.static(path.join(__dirname, "static")));
 
 // using the session middleware here for saving the state of login user :)
 app.use(
+    // generate the secret key random for more secure
     session({
-        secret: "keyboard cat",
-        resave: true,
-        saveUninitialized: true
+        secret: process.env.SESSION_SECRET,
+        // resave if nothing is change
+        resave: false,
+        // save empty value?
+        saveUninitialized: false
     })
 );
 
@@ -48,13 +56,14 @@ require("./config/passport")(passport);
 
 // initialize middleware
 app.use(passport.initialize());
+// store the state of user in state
 app.use(passport.session());
 
 // setting the login user global user here
 app.get("*", (req, res, next) => {
     res.locals.USER = req.user;
-    res.locals.success_msg = req.flash("success");
-    res.locals.error_msg = req.flash("danger");
+    // res.locals.success_msg = req.flash("success");
+    // res.locals.error_msg = req.flash("danger");
 
     next();
 });
@@ -62,7 +71,7 @@ app.get("*", (req, res, next) => {
 // creating the routes here
 app.get("/", (req, res) => {
     Artlices.find()
-        .select("_id author title body")
+        .select("_id author authorID title body")
         .exec()
         .then(data => {
             res.render("index", {
@@ -83,7 +92,7 @@ const PORT = process.env.PORT || 1200;
 // connecting the mongo to the application
 mongoose
     .connect(
-        "mongodb+srv://SaifRehman:12345s@cluster0-dsdv1.mongodb.net/test?retryWrites=true&w=majority", {
+        "mongodb+srv://SAIF:12345@artboard-yocbf.mongodb.net/test?retryWrites=true&w=majority", {
             useNewUrlParser: true,
             useUnifiedTopology: true
         }
@@ -95,3 +104,12 @@ mongoose
         });
     })
     .catch(err => console.log(`Connection Failed to MongoDB : ${err}`));
+
+// checking for the authenticated user
+function checkAuth(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        res.redirect("/user/login");
+    }
+}
